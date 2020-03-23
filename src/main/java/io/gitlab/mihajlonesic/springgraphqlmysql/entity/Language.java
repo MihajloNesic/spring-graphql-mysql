@@ -7,16 +7,38 @@ import javax.persistence.*;
 public class Language {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String code;
     private String color;
 
-    @ManyToOne
-    @JoinColumn(name = "language_type_id", referencedColumnName = "id")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "languageType")
     private LanguageType languageType;
 
     public Language() {
+    }
+
+    public static Language create(String name, String code, String color, String languageType) {
+        Language language = new Language();
+        language.setName(name);
+        language.setCode(code);
+        language.setColor(color);
+        language.setLanguageType(languageType);
+        return language;
+    }
+
+    public Language updateFields(String name, String code, String color, String languageType) {
+        if (name != null)
+            setName(name);
+        if (code != null)
+            setCode(code);
+        if (color != null)
+            setColor(color);
+        if (languageType != null)
+            setLanguageType(languageType);
+        return this;
     }
 
     public Long getId() {
@@ -51,16 +73,19 @@ public class Language {
         this.color = color;
     }
 
-    public EnumLanguageType getLanguageType() {
-        if (languageType != null)
-            return EnumLanguageType.valueOf(languageType.getType());
-        return null;
+    public LanguageType getLanguageType() {
+        return languageType;
     }
 
-    public void setLanguageType(EnumLanguageType languageType) {
-        LanguageType temp = new LanguageType();
-        temp.setId(languageType.getId());
-        temp.setType(languageType.name());
-        this.languageType = temp;
+    public void setLanguageType(LanguageType languageType) {
+        this.languageType = languageType;
+    }
+
+    public void setLanguageType(String languageType) {
+        this.languageType = LanguageType.valueOf(languageType);
+    }
+
+    public enum LanguageType {
+        PROGRAMMING, DATA, MARKUP
     }
 }

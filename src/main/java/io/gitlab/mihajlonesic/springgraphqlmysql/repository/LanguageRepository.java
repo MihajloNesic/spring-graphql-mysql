@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface LanguageRepository extends JpaRepository<Language, Long> {
 
-    @Query("select l from Language l, LanguageType lt where l.languageType.id = lt.id and lt.type = upper(:languageType)")
+    @Query("select l from Language l where l.languageType = upper(:languageType)")
     List<Language> findByLanguageType(@Param("languageType") String languageType);
 }
